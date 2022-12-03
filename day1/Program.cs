@@ -3,16 +3,22 @@ var logFile = File.ReadAllLines("input.txt");
 foreach (var s in logFile) input.Add(s);
 
 var elfCalDict = new Dictionary<int, int>();
-var i = 0;
+var index = 0;
 foreach (var item in input)
 {
-    if (string.IsNullOrEmpty(item)) ++i;
+    if (string.IsNullOrEmpty(item)) ++index;
     else
     {
-        if (elfCalDict.ContainsKey(i)) elfCalDict[i] += Int32.Parse(item);
-        else elfCalDict.Add(i, Int32.Parse(item));
+        if (elfCalDict.ContainsKey(index)) elfCalDict[index] += Int32.Parse(item);
+        else elfCalDict.Add(index, Int32.Parse(item));
     }
 }
-var elfwithMostFood = elfCalDict.MaxBy(x => x.Value);
 
-Console.WriteLine($"Elf: {elfwithMostFood.Key}, Cal: {elfwithMostFood.Value}");
+var topThreeElfs = new Dictionary<int, int>();
+for (int i = 0; i < 3; i++)
+{
+    var elfwithMostFood = elfCalDict.MaxBy(x => x.Value);
+    topThreeElfs.Add(elfwithMostFood.Key, elfwithMostFood.Value);
+    elfCalDict.Remove(elfwithMostFood.Key);
+}
+Console.WriteLine($"Elfs: {string.Join(", ", topThreeElfs.Keys)}, Cals: {topThreeElfs.Sum(x => x.Value)} ({string.Join(", ", topThreeElfs.Values)})");
